@@ -1,0 +1,5 @@
+.env
+venv/
+__pycache__/
+.DS_Store
+multi_ai_agent_llmops.egg-info/
