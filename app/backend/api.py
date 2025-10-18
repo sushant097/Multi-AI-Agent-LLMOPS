@@ -32,9 +32,8 @@ def chat_endpoint(request: RequestState):
         response = get_response_from_ai_agents(
             request.model_name,
             request.messages,
-            request.allow_search
-            request.system_prompt,
-            
+            request.allow_search,
+            request.system_prompt
         )
         logger.info(f"Successfully got  response from AI agents {request.model_name}")
 

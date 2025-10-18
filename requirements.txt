@@ -7,3 +7,6 @@ pydantic
 streamlit
 langgraph
 langchain-core
+# Tavily integration (new package) + SDK
+langchain-tavily>=0.1.0
+tavily-python>=0.3.0
