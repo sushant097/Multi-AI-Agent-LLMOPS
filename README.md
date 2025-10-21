@@ -236,47 +236,83 @@ The `Jenkinsfile` already includes a `sonarqube` stage for analysis.
 
 ### Step 1 — Setup AWS Credentials in Jenkins
 
-1. Create IAM user with:
+1. Create an IAM user or role with these permissions:
 
    * `AmazonEC2ContainerRegistryFullAccess`
    * `AmazonEC2ContainerServiceFullAccess`
-2. Add in Jenkins Credentials:
+2. In Jenkins, add credentials:
 
-   * ID: `aws-credentials`
-   * Access Key & Secret
+   * **Kind:** AWS Credentials
+   * **ID:** `aws-credentials`
+   * **Access Key & Secret Key:** from the IAM user above
 
-### Step 2 — Install AWS CLI in Jenkins Container
+---
+
+### Step 2 — Install AWS CLI (Linux ARM64)
+
+If you’re running Jenkins inside Docker on **Apple Silicon (M1/M2/M3)**, your container uses **Linux ARM64**, so you must install the **ARM64 build** of the AWS CLI.
+
+Run these commands:
 
 ```bash
 docker exec -u root -it jenkins-dind bash
 apt update -y && apt install -y unzip curl
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip && ./aws/install && aws --version
+
+# Remove any existing (incorrect) AWS CLI binaries
+rm -rf /usr/local/aws-cli /usr/local/bin/aws || true
+
+# ✅ Install AWS CLI for Linux ARM64 (Apple Silicon compatible)
+curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+# Verify
+aws --version
 exit
 ```
 
-### Step 3 — Create and Push Image to ECR
+You should see:
 
-```bash
-# In Jenkinsfile (already configured)
-# AWS ECR build & push stages
 ```
-
-Trigger pipeline → image is built and pushed to ECR.
-
-### Step 4 — Deploy to AWS ECS (Fargate)
-
-1. Create ECS Cluster → **Fargate**
-2. Create Task Definition → add container using ECR image URI → Port 8501
-3. Create Service → enable Public IP
-4. Open security group → inbound TCP 8501 → `0.0.0.0/0`
-5. Visit `http://<PublicIP>:8501` to verify.
+aws-cli/2.x.x Python/3.x.x Linux/aarch64
+```
 
 ---
 
-## 🔐 Environment Variables
+### Step 3 — Create & Push Docker Image to AWS ECR
 
-Add these in your ECS **Task Definition** under Container → Environment Variables:
+1. In Jenkins, open your pipeline project.
+2. The `Jenkinsfile` already includes AWS ECR build and push stages:
+
+   * `docker build -t <ecr-repo-uri>:latest .`
+   * `docker push <ecr-repo-uri>:latest`
+3. Trigger your pipeline — Jenkins will build, tag, and push the container image to ECR.
+
+---
+
+### Step 4 — Deploy on AWS ECS (Fargate)
+
+1. Create an **ECS Cluster** → Launch type: **Fargate**
+2. Create a **Task Definition**:
+
+   * Container image → your **ECR image URI**
+   * Port mappings → `8501`
+   * Add environment variables (below)
+3. Create a **Service** with desired tasks and enable **Public IP**
+4. Adjust your **Security Group** inbound rules:
+
+   ```
+   Type: Custom TCP | Port: 8501 | Source: 0.0.0.0/0
+   ```
+5. Once deployed, visit:
+
+   ```
+   http://<PublicIP>:8501
+   ```
+
+---
+
+### 🔐 Environment Variables (ECS Task Definition)
 
 ```
 GROQ_API_KEY = gsk_...
@@ -284,6 +320,7 @@ TAVILY_API_KEY = tvly-dev-...
 ```
 
 ---
+
 
 ## 🧪 Development Notes
 
