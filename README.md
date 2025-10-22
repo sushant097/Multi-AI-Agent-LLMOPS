@@ -1,5 +1,4 @@
 
-
 # 🧠 MULTI AI AGENT PROJECT — LLMOPS PIPELINE
 
 A compact, **multi-agent LLMOps** project demonstrating how to build, test, analyze, and deploy an AI assistant using:
@@ -16,16 +15,17 @@ This README provides a clean, end-to-end guide — from local setup to productio
 ## 📘 Table of Contents
 
 1. [About](#about)
-2. [Tools & Tech Stack](#tools--tech-stack)
-3. [Repository Layout](#repository-layout)
-4. [Local Setup](#local-setup)
-5. [WSL & Docker Setup (Windows)](#wsl--docker-setup-windows)
-6. [CI/CD with Jenkins](#cicd-with-jenkins)
-7. [SonarQube Integration](#sonarqube-integration)
-8. [AWS ECR & ECS Deployment](#aws-ecr--ecs-deployment)
-9. [Environment Variables](#environment-variables)
-10. [Development Notes](#development-notes)
-11. [License](#license)
+2. [Demos](#demos)
+3. [Tools & Tech Stack](#tools--tech-stack)
+4. [Repository Layout](#repository-layout)
+5. [Local Setup](#local-setup)
+6. [WSL & Docker Setup (Windows)](#wsl--docker-setup-windows)
+7. [CI/CD with Jenkins](#cicd-with-jenkins)
+8. [SonarQube Integration](#sonarqube-integration)
+9. [AWS ECR & ECS Deployment](#aws-ecr--ecs-deployment)
+10. [Environment Variables](#environment-variables)
+11. [Development Notes](#development-notes)
+12. [License](#license)
 
 ---
 
@@ -40,6 +40,27 @@ Includes:
 * Basic frontend utilities (`frontend/ui.py`)
 * Jenkins pipeline configuration (`Jenkinsfile`)
 * Deployment to AWS ECS (Fargate) via ECR
+
+---
+
+## 🎬 Demos
+
+### 1) Project Demo
+
+![Project Demo](docs/demo/Project-Demo.gif) 
+
+
+---
+
+### 2) Jenkins Integration Demo
+
+![Jenkins CI Pipeline Demo](docs/demo/Jenkins-Integration.gif) 
+
+---
+
+### 3) SonarQube Output Demo
+
+![SonarQube Report Demo](docs/demo/SonarQube-demo.gif)
 
 ---
 
@@ -73,6 +94,12 @@ Multi-AI-Agent-LLMOPS/
 │
 ├── custom_jenkins/
 │   └── Dockerfile           # Jenkins setup image
+│
+├── docs/
+│   └── demo/                # <-- put GIF/MP4 demos here
+│       ├── project-demo.gif
+│       ├── jenkins-pipeline.gif
+│       └── sonarqube-report.gif
 │
 ├── Jenkinsfile              # Pipeline definition
 ├── requirements.txt
@@ -320,7 +347,6 @@ TAVILY_API_KEY = tvly-dev-...
 ```
 
 ---
-
 
 ## 🧪 Development Notes
 
